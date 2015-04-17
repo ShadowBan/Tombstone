@@ -3,6 +3,7 @@ version:             0.0.1
 synopsis:            An app for uploading your own personal wanted poster made using Haskell and Polymer
 -- description:
 homepage:            https://github.com/ShadowBan/Tombstone
+bug-reports:         https://github.com/ShadowBan/Tombstone/issues
 license:             MIT
 license-file:        LICENSE
 author:              Michael Xavier
@@ -13,8 +14,42 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable tombstone
-  main-is:             Main.hs
-  build-depends:       base >=4.7 && <4.8
+
+flag lib-werror
+  description: Build with all warnings and treat them as errors
+  default: False
+  manual: True
+
+
+library
+  build-depends:       base >= 4.7 && < 4.8
+  exposed-modules:
   hs-source-dirs:      src
   default-language:    Haskell2010
+  ghc-options:         -Wall
+  if flag(lib-werror)
+     ghc-options: -Werror
+
+
+executable tombstone
+  main-is:             Main.hs
+  build-depends:       base >= 4.7 && < 4.8
+                     , tombstone
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+  if flag(lib-werror)
+     ghc-options: -Werror
+
+
+test-suite test
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      test
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 4.8
+                     , tombstone
+                     , tasty >= 0.10.1 && < 0.11
+  ghc-options:         -Wall
+  if flag(lib-werror)
+     ghc-options: -Werror
