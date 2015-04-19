@@ -7,6 +7,7 @@ Haskell and Polymer
 ## Building
 
 ```
+cabal sandbox init
 cabal install --only-dependencies --enable-tests
 cabal configure --enable-tests -flib-werror
 cabal build
