@@ -14,3 +14,10 @@ cabal.sandbox.config
 *.prof
 *.aux
 *.hp
+frontend/node_modules
+frontend/dist
+frontend/test/temp
+frontend/.sass-cache
+frontend/bower_components
+frontend/.tmp
+frontend/test/bower_components/
