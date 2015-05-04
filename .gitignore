@@ -21,3 +21,4 @@ frontend/.sass-cache
 frontend/bower_components
 frontend/.tmp
 frontend/test/bower_components/
+.envrc

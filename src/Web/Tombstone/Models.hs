@@ -2,6 +2,7 @@ module Web.Tombstone.Models
     ( User(..)
     , Email(..)
     , UserName(..)
+    , GithubLogin(..)
     , Bounty(..)
     , BountyTitle(..)
     , BountyDescription(..)
@@ -20,8 +21,11 @@ import           Data.Text (Text)
 
 
 data User = User {
-      userName  :: UserName
-    , userEmail :: Email
+      userName      :: UserName
+      userAvatarUrl :: URL
+    , userEmail     :: Maybe Email
+    , githubLogin   :: GithubLogin
+    , hireable      :: Bool
     }
 
 
@@ -34,6 +38,18 @@ newtype Email = Email {
 -------------------------------------------------------------------------------
 newtype UserName = UserName {
       userNameText :: Text
+    }
+
+
+-------------------------------------------------------------------------------
+newtype GithubLogin = GithubLogin {
+      githubLoginText :: Text
+    }
+
+
+-------------------------------------------------------------------------------
+newtype URL = URL {
+      urlText :: Text
     }
 
 

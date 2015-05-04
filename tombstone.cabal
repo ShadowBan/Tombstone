@@ -23,7 +23,20 @@ flag lib-werror
 
 library
   build-depends:       base >= 4.6 && < 4.9
-  exposed-modules:
+                     , text
+                     , errors
+                     , time
+                     , postgresql-simple
+                     , wai-middleware-static >= 0.6.0.1 && < 0.7
+                     , Spock
+                     , optparse-applicative >= 0.11.0.2 && < 0.12
+                     , hoauth2
+                     , http-client
+                     , aeson
+                     , mtl
+                     , transformers
+                     , lucid
+  exposed-modules:     Web.Tombstone.Types
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall
@@ -35,9 +48,21 @@ executable tombstone
   main-is:             Main.hs
   build-depends:       base
                      , tombstone
+                     , errors
+                     , text
                      , optparse-applicative >= 0.11.0.2 && < 0.12
                      , Spock >= 0.7.8.0 && < 0.8
                      , wai-middleware-static >= 0.6.0.1 && < 0.7
+                     , postgresql-simple
+                     , opaleye
+                     , time
+                     , hoauth2
+                     , http-client-tls
+                     , http-client
+                     , aeson
+                     , mtl
+                     , transformers
+                     , lucid
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall

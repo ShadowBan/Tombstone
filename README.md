@@ -32,3 +32,9 @@ cabal build
 ```
 cabal repl
 ```
+
+##TODOS
+
+* Dependencies are mess. Unclear why executable and library duplicate
+  so much of eachother.
+* Switch to .env file with examples
