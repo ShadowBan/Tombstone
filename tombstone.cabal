@@ -32,21 +32,38 @@ library
                      , optparse-applicative >= 0.11.0.2 && < 0.12
                      , hoauth2
                      , http-client
+                     , http-client-tls
+                     , opaleye
+                     , product-profunctors
                      , aeson
                      , mtl
                      , transformers
                      , lucid
   exposed-modules:     Web.Tombstone.Types
+                     , Web.Tombstone.Models
+                     , Web.Tombstone.Schema
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall
   if flag(lib-werror)
      ghc-options: -Werror
 
+executable migrate
+  main-is:             Migrate.hs
+  build-depends:       base >= 4.6 && < 4.9
+                     , postgresql-simple-migration >= 0.1.3.0 && < 0.1.4
+                     , errors
+                     , postgresql-simple
+                     , dotenv
+  hs-source-dirs:      exec
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+  if flag(lib-werror)
+     ghc-options: -Werror
 
 executable tombstone
   main-is:             Main.hs
-  build-depends:       base
+  build-depends:       base >= 4.6 && < 4.9
                      , tombstone
                      , errors
                      , text
@@ -56,6 +73,7 @@ executable tombstone
                      , postgresql-simple
                      , opaleye
                      , time
+                     , product-profunctors
                      , hoauth2
                      , http-client-tls
                      , http-client
@@ -63,6 +81,7 @@ executable tombstone
                      , mtl
                      , transformers
                      , lucid
+                     , dotenv
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall

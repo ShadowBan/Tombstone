@@ -10,7 +10,6 @@ module Web.Tombstone.Routes.OAuth2
 import           Control.Applicative
 import           Control.Monad.Reader
 import           Data.Aeson
-import           Data.Text               (Text)
 import qualified Data.Text.Encoding      as T
 import           Network.HTTP.Client
 import           Network.HTTP.Client.TLS
@@ -56,14 +55,21 @@ userInfo mgr token = authGetJSON mgr token "https://api.github.com/user"
 
 
 -------------------------------------------------------------------------------
-data GithubUser = GithubUser { gid   :: Integer
-                             , gname :: Text
+data GithubUser = GithubUser { gName      :: FullName
+                             , gLogin     :: GithubLogin
+                             , gAvatarUrl :: URL
+                             , gEmail     :: Email
+                             , gHireable  :: Bool
                              } deriving (Show, Eq)
 
 
 -------------------------------------------------------------------------------
 instance FromJSON GithubUser where
-    parseJSON (Object o) = GithubUser
-                           <$> o .: "id"
-                           <*> o .: "name"
-    parseJSON _ = mzero
+  parseJSON = withObject "GithubUser" parseGithubUser
+    where
+      parseGithubUser o = GithubUser
+                          <$> o .: "name"
+                          <*> o .: "login"
+                          <*> o .: "avatar_url"
+                          <*> o .: "email"
+                          <*> o .: "hireable"

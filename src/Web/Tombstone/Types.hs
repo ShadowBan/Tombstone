@@ -1,4 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 module Web.Tombstone.Types
     ( GithubClientId(..)
     , GithubSecretId(..)
@@ -6,14 +8,21 @@ module Web.Tombstone.Types
     , AppState(..)
     , SessionData(..)
     , AppM
+    , FullName(..)
+    , URL(..)
+    , Email(..)
+    , GithubLogin(..)
     ) where
 
 
 -------------------------------------------------------------------------------
+import           Data.Aeson
 import           Data.Text                  (Text)
 import           Data.Time
 import           Database.PostgreSQL.Simple (Connection)
 import           GHC.Word
+import           Opaleye
+import           Opaleye.Internal.RunQuery
 import           Web.Spock.Safe
 -------------------------------------------------------------------------------
 
@@ -27,6 +36,7 @@ newtype GithubClientId = GithubClientId {
 newtype GithubSecretId = GithubSecretId {
       githubSecretIdText :: Text
     } deriving (Show, Eq, Ord)
+
 
 
 -------------------------------------------------------------------------------
@@ -51,8 +61,46 @@ data AppState = AppState {
     }
 
 -------------------------------------------------------------------------------
-data SessionData = SessionData
+data SessionData = SessionData {
+      sdUserId :: Maybe Int --TODO: key type from opaleye
+    }
 
 
 -------------------------------------------------------------------------------
 type AppM = WebStateM Connection SessionData AppState
+
+
+-------------------------------------------------------------------------------
+newtype Email = Email {
+      emailText :: Text
+    } deriving (Show, Eq, Ord, FromJSON)
+
+
+deriving instance QueryRunnerColumnDefault PGText Email
+
+
+-------------------------------------------------------------------------------
+newtype FullName = FullName {
+      fullNameText :: Text
+    } deriving (Show, Eq, Ord, FromJSON)
+
+
+deriving instance QueryRunnerColumnDefault PGText FullName
+
+
+-------------------------------------------------------------------------------
+newtype GithubLogin = GithubLogin {
+      githubLoginText :: Text
+    } deriving (Show, Eq, Ord, FromJSON)
+
+
+deriving instance QueryRunnerColumnDefault PGText GithubLogin
+
+
+-------------------------------------------------------------------------------
+newtype URL = URL {
+      urlText :: Text
+    } deriving (Show, Eq, Ord, FromJSON)
+
+
+deriving instance QueryRunnerColumnDefault PGText URL

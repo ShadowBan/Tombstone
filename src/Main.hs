@@ -6,23 +6,28 @@ module Main
 
 
 -------------------------------------------------------------------------------
+import qualified Configuration.Dotenv          as DE
 import           Control.Error
+import           Control.Monad.IO.Class
 import           Data.Monoid
 import qualified Data.Text                     as T
 import           Database.PostgreSQL.Simple    as PG
 import           Network.Wai.Middleware.Static
+import qualified Opaleye                       as O
 import           Options.Applicative           as O
 import           System.Environment
 import           Web.Spock.Safe
 -------------------------------------------------------------------------------
 import qualified Web.Tombstone.Routes.OAuth2   as OAuth2
 import qualified Web.Tombstone.Routes.Sessions as Sessions
+import           Web.Tombstone.Schema
 import           Web.Tombstone.Types
 -------------------------------------------------------------------------------
 
 
 main :: IO ()
 main = do
+  DE.loadFile True ".env"
   CLIOptions {..} <- execParser opts
   cfg <- Config <$> pure cliPort
                 <*> (GithubClientId . T.pack <$> envKey "GITHUB_CLIENT_ID")
@@ -76,7 +81,7 @@ run cfg@Config {..} =
                                , sc_sessionTTL = 60 * 60 * 24 * 14
                                , sc_sessionIdEntropy = 1 -- wut
                                , sc_sessionExpandTTL = False
-                               , sc_emptySession = SessionData
+                               , sc_emptySession = SessionData Nothing
                                , sc_persistCfg = Nothing -- no persistence for now
                                }
 
@@ -86,6 +91,9 @@ app :: SpockT AppM ()
 app = do
   subcomponent "oauth2" $ OAuth2.routes
   subcomponent "sessions" $ Sessions.routes
+  get "debug" $ do
+    res <- runQuery $ \c -> runUsersQuery c $ O.queryTable usersTable
+    liftIO $ print (res :: [User])
 
 
 -------------------------------------------------------------------------------

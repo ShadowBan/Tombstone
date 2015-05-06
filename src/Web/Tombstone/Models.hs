@@ -1,7 +1,7 @@
 module Web.Tombstone.Models
     ( User(..)
     , Email(..)
-    , UserName(..)
+    , FullName(..)
     , GithubLogin(..)
     , Bounty(..)
     , BountyTitle(..)
@@ -16,13 +16,15 @@ module Web.Tombstone.Models
 
 
 -------------------------------------------------------------------------------
-import           Data.Text (Text)
+import           Data.Text           (Text)
+-------------------------------------------------------------------------------
+import           Web.Tombstone.Types
 -------------------------------------------------------------------------------
 
 
 data User = User {
-      userName      :: UserName
-      userAvatarUrl :: URL
+      userName      :: FullName
+    , userAvatarUrl :: URL
     , userEmail     :: Maybe Email
     , githubLogin   :: GithubLogin
     , hireable      :: Bool
@@ -30,35 +32,11 @@ data User = User {
 
 
 -------------------------------------------------------------------------------
-newtype Email = Email {
-      emailText :: Text
-    }
-
-
--------------------------------------------------------------------------------
-newtype UserName = UserName {
-      userNameText :: Text
-    }
-
-
--------------------------------------------------------------------------------
-newtype GithubLogin = GithubLogin {
-      githubLoginText :: Text
-    }
-
-
--------------------------------------------------------------------------------
-newtype URL = URL {
-      urlText :: Text
-    }
-
-
--------------------------------------------------------------------------------
 data Bounty = Bounty {
-      bountyTitle :: BountyTitle
-    , bountyDescription :: BountyDescription
+      bountyTitle        :: BountyTitle
+    , bountyDescription  :: BountyDescription
     --TODO: user key
-    , bountyClaimed :: Bool
+    , bountyClaimed      :: Bool
     , bountyCompensation :: Maybe CompensationRequirements
     }
 
@@ -92,12 +70,12 @@ mkCompensation c n
 
 
 -------------------------------------------------------------------------------
-compensationCurrency :: Currency
+compensationCurrency :: Compensation -> Currency
 compensationCurrency (Compensation c _) = c
 
 
 -------------------------------------------------------------------------------
-compensationQuantity :: Int
+compensationQuantity :: Compensation -> Int
 compensationQuantity (Compensation _ n) = n
 
 
