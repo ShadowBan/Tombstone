@@ -37,4 +37,8 @@ cabal repl
 
 * Dependencies are mess. Unclear why executable and library duplicate
   so much of eachother.
-* Switch to .env file with examples
+* ~~Switch to .env file with examples~~
+* 1:1 Bounty to User
+* Bounty state
+* Bounty tags
+* User bounty watchlist
