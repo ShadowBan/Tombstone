@@ -32,7 +32,7 @@ main = do
                       , connectPassword = pwd
                       , connectDatabase = db
                       }
-    bracket (connect connInfo) close $ \conn -> do
+    bracket (connect connInfo) close $ \conn -> withTransaction conn $ do
       let ctx = MigrationContext { migrationContextCommand = MigrationInitialization
                                  , migrationContextVerbose = True
                                  , migrationContextConnection = conn
