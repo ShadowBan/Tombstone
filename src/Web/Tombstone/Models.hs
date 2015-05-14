@@ -4,7 +4,6 @@ module Web.Tombstone.Models
     , FullName(..)
     , GithubLogin(..)
     , Bounty(..)
-    , BountyTitle(..)
     , BountyDescription(..)
     , CompensationRequirements(..)
     , Compensation
@@ -33,17 +32,9 @@ data User = User {
 
 -------------------------------------------------------------------------------
 data Bounty = Bounty {
-      bountyTitle        :: BountyTitle
-    , bountyDescription  :: BountyDescription
-    --TODO: user key
+      bountyDescription  :: BountyDescription
     , bountyClaimed      :: Bool
     , bountyCompensation :: Maybe CompensationRequirements
-    }
-
-
--------------------------------------------------------------------------------
-newtype BountyTitle = BountyTitle {
-      bountyTitleText :: Text
     }
 
 
