@@ -12,6 +12,12 @@ module Web.Tombstone.Types
     , URL(..)
     , Email(..)
     , GithubLogin(..)
+    , BountyDescription(..)
+    , CompensationRequirements(..)
+    , mkCompensation
+    , compensationCurrency
+    , compensationMagnitude
+    , Currency(..)
     ) where
 
 
@@ -104,3 +110,38 @@ newtype URL = URL {
 
 
 deriving instance QueryRunnerColumnDefault PGText URL
+
+-------------------------------------------------------------------------------
+newtype BountyDescription = BountyDescription {
+      bountyDescriptionText :: Text
+    }
+
+
+-------------------------------------------------------------------------------
+data CompensationRequirements = Salary Compensation
+                              | Hourly Compensation
+
+
+-------------------------------------------------------------------------------
+data Compensation = Compensation Currency Int
+
+
+-------------------------------------------------------------------------------
+mkCompensation :: Currency -> Int -> Maybe Compensation
+mkCompensation c n
+  | n >= 0    = Just $ Compensation c n
+  | otherwise = Nothing
+
+
+-------------------------------------------------------------------------------
+compensationCurrency :: Compensation -> Currency
+compensationCurrency (Compensation c _) = c
+
+
+-------------------------------------------------------------------------------
+compensationMagnitude :: Compensation -> Int
+compensationMagnitude (Compensation _ n) = n
+
+
+-------------------------------------------------------------------------------
+data Currency = USDCents
