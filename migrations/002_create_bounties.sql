@@ -4,5 +4,6 @@ CREATE TABLE bounties (
        claimed boolean not null,
        compensation_schedule text not null,
        compensation_magnitude integer not null CHECK (compensation_magnitude >= 0),
+       compensation_currency text not null,
        user_id integer not null UNIQUE REFERENCES users (id)
 );

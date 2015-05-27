@@ -94,6 +94,37 @@ runUsersQuery = runQuery
 -------------------------------------------------------------------------------
 -- Bounties
 -------------------------------------------------------------------------------
+data Currency = USDCents
+                deriving (Show, Eq, Ord)
+
+
+-------------------------------------------------------------------------------
+data CompensationSchedule = Hourly
+                          | Salary
+                          deriving (Show, Eq)
+
+-------------------------------------------------------------------------------
+data CompensationRequirements' a b c = CompensationRequirements {
+      crSchedule  :: a
+    , crCurrency  :: b
+    , crMagnitude :: c
+    } deriving (Show, Eq, Ord)
+
+
+type CompensationRequirements =
+  CompensationRequirements' CompensationSchedule Currency Int
+
+
+type CompensationRequirementsColumn =
+  CompensationRequirements' (Column PGText)
+                            (Column PGText)
+                            (Column PGInt8)
+
+
+$(makeAdaptorAndInstance "pCompensationRequirements" ''CompensationRequirements')
+
+
+
 data Bounty' a b c d e = Bounty {
       bountyId           :: a
     , bountyDescription  :: b
@@ -109,14 +140,12 @@ data BountyId' a = BountyId a deriving (Show, Eq, Ord)
 
 type BountyIdColumn = BountyId' (Column PGInt8)
 
---TODO: composite column for compensation?
 
 type BountyColumn = Bounty'
                     BountyIdColumn
                     (Column PGText)
                     (Column PGBool)
---TODO: composite column for compensation?
-                    (Column PGText)
+                    CompensationRequirementsColumn
                     UserIdColumn
 
 type BountyId = BountyId' Int64
@@ -132,13 +161,18 @@ $(makeAdaptorAndInstance "pBounty" ''Bounty')
 $(makeAdaptorAndInstance "pBountyId" ''BountyId')
 
 
+-------------------------------------------------------------------------------
 bountiesTable :: Table BountyColumn BountyColumn
 bountiesTable = Table "bounties" (pBounty Bounty { bountyId = pBountyId (BountyId (required "id"))
                                                  , bountyDescription = required "description"
                                                  , bountyClaimed = required "claimed"
-                                                 , bountyCompensation = required "compensation"
+                                                 , bountyCompensation = ccols
                                                  , bountyUserId = pUserId (UserId (required "user_id"))
                                                  })
+  where
+     ccols = pCompensationRequirements CompensationRequirements { crSchedule = required "compensation_schedule"
+                                                                , crCurrency = required "compensation_currency"
+                                                                , crMagnitude = required "compensation_magnitude"}
 
 
 -------------------------------------------------------------------------------

@@ -42,3 +42,4 @@ cabal repl
 * Bounty state
 * Bounty tags
 * User bounty watchlist
+* Use drifter

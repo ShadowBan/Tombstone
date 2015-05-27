@@ -13,11 +13,6 @@ module Web.Tombstone.Types
     , Email(..)
     , GithubLogin(..)
     , BountyDescription(..)
-    , CompensationRequirements(..)
-    , mkCompensation
-    , compensationCurrency
-    , compensationMagnitude
-    , Currency(..)
     ) where
 
 
@@ -114,34 +109,7 @@ deriving instance QueryRunnerColumnDefault PGText URL
 -------------------------------------------------------------------------------
 newtype BountyDescription = BountyDescription {
       bountyDescriptionText :: Text
-    }
+    } deriving (Show, Eq, Ord)
 
 
 -------------------------------------------------------------------------------
-data CompensationRequirements = Salary Compensation
-                              | Hourly Compensation
-
-
--------------------------------------------------------------------------------
-data Compensation = Compensation Currency Int
-
-
--------------------------------------------------------------------------------
-mkCompensation :: Currency -> Int -> Maybe Compensation
-mkCompensation c n
-  | n >= 0    = Just $ Compensation c n
-  | otherwise = Nothing
-
-
--------------------------------------------------------------------------------
-compensationCurrency :: Compensation -> Currency
-compensationCurrency (Compensation c _) = c
-
-
--------------------------------------------------------------------------------
-compensationMagnitude :: Compensation -> Int
-compensationMagnitude (Compensation _ n) = n
-
-
--------------------------------------------------------------------------------
-data Currency = USDCents
